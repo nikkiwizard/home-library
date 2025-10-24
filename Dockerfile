@@ -1,20 +1,35 @@
-# I know I said mysql but through research, apache seems to be the way to go
-FROM php:7.2-apache
+FROM ubuntu:22.04
 
-# If we don't set this, apt-get prompts us to put in the timezone
+# Avoid interactive prompts during installation
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install ubuntu packages & MySQL server
-RUN apt-get update
-RUN apt-get install -y git php composer 
-RUN apt-get install -y default-mysql-server
-RUN apt-get install docker-php-ext-install mysqli pdo pdo_mysql
-RUN rm -rf /var/lib/apt/lists/*
+# Install required packages
+RUN apt-get update && apt-get install -y \
+    apache2 \
+    php \
+    php-mysql \
+    mariadb-server \
+    mariadb-client \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install PHP dependencies
-RUN composer install --no-dev --prefer-source
+# Configure MariaDB
+RUN service mariadb start && \
+    mysqld_safe & sleep 5 && \
+    mysql -e "CREATE DATABASE testdb;" && \
+    mysql -e "CREATE USER 'testuser'@'localhost' IDENTIFIED BY 'testpass';" && \
+    mysql -e "GRANT ALL PRIVILEGES ON testdb.* TO 'testuser'@'localhost';"
 
-# Put php app into directory
-COPY . /var/www/html
+# Configure Apache
+RUN a2enmod rewrite
 
-CMD service mysql start && apache2-foreground
+# Copy your PHP application
+COPY . /var/www/html/
+
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html
+
+# Expose ports
+EXPOSE 80 3306
+
+# Start both Apache and MariaDB
+CMD service mariadb start && apache2ctl -D FOREGROUND
