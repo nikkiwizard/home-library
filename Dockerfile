@@ -25,6 +25,8 @@ RUN a2enmod rewrite
 # Copy Web App (For some reason, the app won't default to index.php unless I do it like this)
 COPY index.php /var/www/html/
 COPY add_book.php /var/www/html/
+COPY loan_book.php /var/www/html/
+COPY return_book.php /var/www/html/
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html
