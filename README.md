@@ -22,6 +22,7 @@ Now you can navigate to ```localhost``` and start cataloging! Click on "Add Book
 
 I'm currently working on adding persistent volumes and making the user interface nicer, as well as a delete book feature.
 This application will also be split into two containers once we're in production. 
+I'm actually really excited with where this is going! :)
 
 ## Notes for Professor Tolboom
 
