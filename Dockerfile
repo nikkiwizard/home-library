@@ -24,6 +24,7 @@ RUN a2enmod rewrite
 
 # Copy your PHP application
 COPY index.php /var/www/html/
+COPY test_db.php /var/www/html/
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html
