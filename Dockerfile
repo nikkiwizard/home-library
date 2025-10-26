@@ -22,9 +22,9 @@ RUN service mariadb start && \
 # Configure Apache
 RUN a2enmod rewrite
 
-# Copy your PHP application
+# Copy Web App (For some reason, the app won't default to index.php unless I do it like this)
 COPY index.php /var/www/html/
-COPY test_db.php /var/www/html/
+COPY add_book.php /var/www/html/
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html
